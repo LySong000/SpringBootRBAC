@@ -83,9 +83,9 @@ public class RoleServiceImpl implements RoleService {
     @Override
     @Transactional
     public int deleteById(Integer id) {
-        int flag1 = rolePermissionDao.deleteByRoleId(id);
+//        int flag1 = rolePermissionDao.deleteByRoleId(id);
         int flag2 = roleDao.deleteById(id);
-        if(flag1 != 0 && flag2 != 0){
+        if(flag2 != 0){
             return 1;
         }else {
             return 0;

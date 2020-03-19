@@ -41,6 +41,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@Transactional
 	public Results save(SysUser user, Integer roleId) {
 		if(roleId != null){
 			//保存user对象
@@ -67,6 +68,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@Transactional
 	public Results<SysUser> updateUser(UserDto userDto, Integer roleId) {
 		if(roleId == null){
 			return Results.failure();
@@ -87,6 +89,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@Transactional
 	public int deleteByUserId(Long id) {
 		roleUserDao.deleteByUserId(id.intValue());
 		return userDao.deleteByUserId(id.intValue());

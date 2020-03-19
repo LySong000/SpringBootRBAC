@@ -6,6 +6,7 @@ import com.lysong.friday.model.SysRole;
 import com.lysong.friday.model.SysRoleUser;
 import com.lysong.friday.service.RoleUserService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
@@ -30,6 +31,7 @@ public class RoleUserServiceImpl implements RoleUserService {
     }
 
     @Override
+    @Transactional
     public int deleteByUserId(Integer userId) {
         //根据id删除角色和用户的关联
         return roleUserDao.deleteByUserId(userId);

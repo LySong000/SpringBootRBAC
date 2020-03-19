@@ -12,4 +12,14 @@ public interface PermissionService {
     Results listAllPermission();
 
     Results<SysPermission> listAllPermissionByRoleId(int intValue);
+
+    Results<SysPermission> getAllMenu();
+
+    Results<SysPermission> save(SysPermission sysPermission);
+
+    SysPermission getPermissionById(Integer id);
+
+    Results<SysPermission> update(SysPermission sysPermission);
+
+    Results<SysPermission> deleteById(Integer id);
 }
