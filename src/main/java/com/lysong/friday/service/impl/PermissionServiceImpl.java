@@ -8,11 +8,14 @@ import com.lysong.friday.service.PermissionService;
 import com.lysong.friday.util.TreeUtils;
 import com.sun.media.jfxmedia.logging.Logger;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.scripting.xmltags.ForEachSqlNode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Author: LySong
@@ -70,5 +73,15 @@ public class PermissionServiceImpl implements PermissionService {
         }else {
             return Results.failure();
         }
+    }
+
+    @Override
+    public Results getMenu(Long userId) {
+        List<SysPermission> datas = permissionDao.listByUserId(userId);
+        Iterator<SysPermission> iterator = datas.iterator();
+        datas = datas.stream().filter(p -> p.getType().equals(1)).collect(Collectors.toList());
+        JSONArray array = new JSONArray();
+        TreeUtils.setPermissionsTree(0,datas,array);
+        return Results.success(array);
     }
 }

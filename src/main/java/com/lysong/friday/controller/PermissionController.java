@@ -72,4 +72,11 @@ public class PermissionController {
     public Results<SysPermission> deletePermisson(Integer id){
         return permissionService.deleteById(id);
     }
+
+    @GetMapping("/menu")
+    @ResponseBody
+    public Results<SysPermission> getMenu(Long userId){
+
+        return permissionService.getMenu(userId);
+    }
 }

@@ -33,4 +33,10 @@ public interface PermissionDao {
 
     @Delete("delete t from sys_permission t where t.parentId = #{parentId}")
     int deleteByParentId(Integer parentId);
+
+    @Select("select sp.* from sys_role_user sru "+
+            "inner join sys_role_permission srp on srp.roleId = sru.roleId "+
+            "left join sys_permission sp on srp.permissionId = sp.id"+
+            " where sru.userId = #{userId}")
+    List<SysPermission> listByUserId(@Param("userId") Long userId);
 }

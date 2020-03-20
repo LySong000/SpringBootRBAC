@@ -22,4 +22,6 @@ public interface PermissionService {
     Results<SysPermission> update(SysPermission sysPermission);
 
     Results<SysPermission> deleteById(Integer id);
+
+    Results getMenu(Long userId);
 }
