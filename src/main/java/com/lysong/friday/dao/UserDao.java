@@ -60,4 +60,7 @@ public interface UserDao {
 
 	@Select("select * from sys_user t where t.username like '%${username}%' limit #{startPosition}, #{limit}")
 	List<SysUser> getUserByFuzzyUserNameByPage(@Param("username")String username, @Param("startPosition")Integer startPosition, @Param("limit")Integer limit);
+
+	@Select("select * from sys_user t where t.email = #{email}")
+    SysUser getUserByEmail(String email);
 }

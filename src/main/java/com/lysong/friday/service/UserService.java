@@ -19,4 +19,6 @@ public interface UserService {
     int deleteByUserId(Long id);
 
     Results<SysUser> getUserByFuzzyUserName(String username, Integer offset, Integer limit);
+
+    SysUser getUserByEmail(String email);
 }

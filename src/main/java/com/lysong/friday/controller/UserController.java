@@ -12,6 +12,7 @@ import com.lysong.friday.service.UserService;
 import com.lysong.friday.util.MD5;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
@@ -81,11 +82,24 @@ public class UserController {
 	@ResponseBody
 	public Results<SysUser> updateUser(UserDto userDto, Integer roleId) {
 		SysUser sysUser = null;
+		//验证用户名是否重复
+		sysUser = userService.getUser(userDto.getUsername());
+		if(sysUser != null && !(sysUser.getId().equals(userDto.getId()))){
+			return Results.failure(ResponseCode.USERNAME_REPEAT.getCode(),ResponseCode.USERNAME_REPEAT.getMessage());
+		}
 		//得到表单数据，同样验证手机号
 		sysUser = userService.getUserByPhone(userDto.getTelephone());
-		if(sysUser != null && (sysUser.getTelephone().equals(userDto.getTelephone())) && sysUser.getId() != userDto.getId()){
+		if(sysUser != null && !(sysUser.getId().equals(userDto.getId()))){
 			return Results.failure(ResponseCode.PHONE_REPEAT.getCode(), ResponseCode.PHONE_REPEAT.getMessage());
 		}
+		sysUser = userService.getUserByEmail(userDto.getEmail());
+		//验证邮箱是否重复
+		if(sysUser != null && !(sysUser.getId().equals(userDto.getId()))){
+			return Results.failure(ResponseCode.EMAIL_REPEAT.getCode(),ResponseCode.EMAIL_REPEAT.getMessage());
+		}
+
+		userDto.setStatus(1);
+		userDto.setPassword(new BCryptPasswordEncoder().encode(userDto.getPassword()));
 		//保存数据
 		return userService.updateUser(userDto,roleId);
 	}

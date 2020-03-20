@@ -101,4 +101,9 @@ public class UserServiceImpl implements UserService {
 		return Results.success(userDao.getUserByFuzzyUserName(username).intValue(),userDao.getUserByFuzzyUserNameByPage(username,offset,limit));
 	}
 
+	@Override
+	public SysUser getUserByEmail(String email) {
+		return userDao.getUserByEmail(email);
+	}
+
 }
