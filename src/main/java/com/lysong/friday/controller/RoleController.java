@@ -7,6 +7,7 @@ import com.lysong.friday.model.SysRole;
 import com.lysong.friday.model.SysUser;
 import com.lysong.friday.service.RoleService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -26,12 +27,14 @@ public class RoleController {
 
     @GetMapping("/all")
     @ResponseBody
+    @PreAuthorize("hasAuthority('sys:user:add')")
     public Results<SysRole> getAll() {
         log.info("RoleController.getAll()");
         return roleService.getAllRoles();
     }
 
     @GetMapping("/add")
+    @PreAuthorize("hasAuthority('sys:role:add')")
     public String addRole(Model model) {
         model.addAttribute("sysRole",new SysRole());
         return "role/role-add";
@@ -39,12 +42,14 @@ public class RoleController {
 
     @PostMapping("/add")
     @ResponseBody
+    @PreAuthorize("hasAuthority('sys:role:add')")
     public Results saveRole(@RequestBody RoleDto roleDto) {
         return roleService.save(roleDto);
     }
 
     @GetMapping("/delete")
     @ResponseBody
+    @PreAuthorize("hasAuthority('sys:role:del')")
     public Results deleteRole(Integer id){
         int flag = roleService.deleteById(id);
         if(flag == 1) {
@@ -55,6 +60,7 @@ public class RoleController {
     }
 
     @GetMapping("/edit")
+    @PreAuthorize("hasAuthority('sys:role:add')")
     public String editRole(Model model, SysRole sysRole) {
         model.addAttribute("sysRole",roleService.getRoleById(sysRole.getId()));
         return "role/role-edit";
@@ -62,6 +68,7 @@ public class RoleController {
 
     @PostMapping("/edit")
     @ResponseBody
+    @PreAuthorize("hasAuthority('sys:role:add')")
     public Results editRole(@RequestBody RoleDto roleDto) {
         int flag = roleService.update(roleDto);
         if(flag != 0){
@@ -74,6 +81,7 @@ public class RoleController {
 
     @GetMapping("/list")
     @ResponseBody
+    @PreAuthorize("hasAuthority('sys:role:query')")
     public Results<SysRole> list(PageTableRequest request) {
         log.info("RoleController.list");
         request.countOffset();
@@ -82,6 +90,7 @@ public class RoleController {
 
     @GetMapping("/findRoleByFuzzyRoleName")
     @ResponseBody
+    @PreAuthorize("hasAuthority('sys:role:query')")
     public Results<SysRole> findRoleByFuzzyRoleName(PageTableRequest request,String roleName) {
         log.info("RoleController.findRoleByFuzzyRoleName()");
         request.countOffset();

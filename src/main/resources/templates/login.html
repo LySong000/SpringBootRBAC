@@ -14,11 +14,11 @@
     <link rel="stylesheet" th:href="@{/xadmin/css/login.css}"/>
 </head>
 <body class="login-bg">
-    
+
     <div class="login layui-anim layui-anim-up">
         <div class="message">后台管理系统</div>
         <div id="darkbannerwrap"></div>
-        
+
         <form method="post" action="/login" id="login-form" class="layui-form" >
             <input name="username" placeholder="用户名"  type="text"  lay-verify="required" class="layui-input" >
             <hr class="hr15">
@@ -43,6 +43,7 @@
 
                             if(datas.authenticated == true){
                                 localStorage.setItem("userId", datas.principal.id);
+                                localStorage.setItem("userName", datas.principal.username);
                                 localStorage.setItem("nickName", datas.principal.nickname);
                                 var authorities = datas.authorities;
                                 var permission = [];

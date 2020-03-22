@@ -63,4 +63,7 @@ public interface UserDao {
 
 	@Select("select * from sys_user t where t.email = #{email}")
     SysUser getUserByEmail(String email);
+
+	@Update("update sys_user t set t.password = #{password} where t.id = #{id}")
+    int changePassword(Long id, String encode);
 }

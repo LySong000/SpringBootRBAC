@@ -10,6 +10,7 @@ import com.lysong.friday.model.SysUser;
 import com.lysong.friday.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.WebDataBinder;
@@ -104,6 +105,19 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public SysUser getUserByEmail(String email) {
 		return userDao.getUserByEmail(email);
+	}
+
+	@Override
+	public Results changePassword(String username, String oldPassword, String newPassword) {
+		SysUser u = userDao.getUser(username);
+		if(u == null){
+			return Results.failure(1,"用户名不存在");
+		}
+		if(!new BCryptPasswordEncoder().encode(oldPassword).equals(u.getPassword())){
+			return Results.failure(1,"旧密码错误");
+		}
+		userDao.changePassword(u.getId(),new BCryptPasswordEncoder().encode(newPassword));
+		return null;
 	}
 
 }

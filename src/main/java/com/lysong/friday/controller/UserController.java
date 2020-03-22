@@ -10,8 +10,11 @@ import com.lysong.friday.model.SysUser;
 import com.lysong.friday.service.RoleUserService;
 import com.lysong.friday.service.UserService;
 import com.lysong.friday.util.MD5;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -41,6 +44,9 @@ public class UserController {
 
 	@GetMapping("/list")
 	@ResponseBody
+	@PreAuthorize("hasAuthority('sys:user:query')")
+	@ApiOperation(value = "分页获取用户信息",notes = "分页获取用户信息")
+	@ApiImplicitParam(name = "request",value = "分页查询实体类",required = false)
 	public Results<SysUser> getUsers(PageTableRequest pageTableRequest) {
 		//计算数据搜索起始点
 		pageTableRequest.countOffset();
@@ -49,6 +55,7 @@ public class UserController {
 	}
 
 	@GetMapping("/add")
+	@PreAuthorize("hasAuthority('sys:user:add123')")
 	public String addUser(Model model) {
 		//避免出现错误
 		model.addAttribute(new SysUser());
@@ -57,6 +64,7 @@ public class UserController {
 
 	@PostMapping("/add")
 	@ResponseBody
+	@PreAuthorize("hasAuthority('sys:user:add')")
 	public Results<SysUser> saveUser(UserDto userDto, Integer roleId) {
 		SysUser sysUser = null;
 		sysUser = userService.getUserByPhone(userDto.getTelephone());
@@ -72,6 +80,7 @@ public class UserController {
 	}
 
 	@GetMapping("/edit")
+	@PreAuthorize("hasAuthority('sys:user:add')")
 	public String addUser(Model model,SysUser sysUser) {
 		//根据id得到一个用户数据，渲染到前端
 		model.addAttribute(userService.getUserById(sysUser.getId()));
@@ -80,6 +89,7 @@ public class UserController {
 
 	@PostMapping("/edit")
 	@ResponseBody
+	@PreAuthorize("hasAuthority('sys:user:add')")
 	public Results<SysUser> updateUser(UserDto userDto, Integer roleId) {
 		SysUser sysUser = null;
 		//验证用户名是否重复
@@ -106,6 +116,7 @@ public class UserController {
 
 	@GetMapping("/delete")
 	@ResponseBody
+	@PreAuthorize("hasAuthority('sys:user:del')")
 	public Results deleteUser(UserDto userDto) {
 		//删除用户
 		int count = userService.deleteByUserId(userDto.getId());
@@ -119,6 +130,7 @@ public class UserController {
 
 	@GetMapping("/findUserByFuzzyUserName")
 	@ResponseBody
+	@PreAuthorize("hasAuthority('sys:user:query')")
 	public Results<SysUser> findUserByFuzzyUserName(PageTableRequest pageTableRequest, String username) {
 		log.info("UserController.findUserByFuzzyUserName(): param ( username = " + username +" )");
 		if(username == null){
@@ -128,6 +140,13 @@ public class UserController {
 		//模糊查询
 		pageTableRequest.countOffset();
 		return userService.getUserByFuzzyUserName(username, pageTableRequest.getOffset(),pageTableRequest.getLimit());
+	}
+
+	@PostMapping("/changePassword")
+	@ApiOperation(value = "修改密码")
+	@ResponseBody
+	public Results<SysUser> changePassword(String username,String oldPassword,String newPassword){
+		return userService.changePassword(username,oldPassword,newPassword);
 	}
 
 	/**

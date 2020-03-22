@@ -21,4 +21,6 @@ public interface UserService {
     Results<SysUser> getUserByFuzzyUserName(String username, Integer offset, Integer limit);
 
     SysUser getUserByEmail(String email);
+
+    Results changePassword(String username, String oldPassword, String newPassword);
 }
